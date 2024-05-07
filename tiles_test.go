@@ -1,7 +1,6 @@
 package tiles
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -51,6 +50,7 @@ type moveRes struct {
 
 func TestMove(t *testing.T) {
 	tests := []struct {
+		name  string
 		board [][]uint
 		down  moveRes
 		up    moveRes
@@ -58,6 +58,7 @@ func TestMove(t *testing.T) {
 		right moveRes
 	}{
 		{
+			name: "Sparse board",
 			board: [][]uint{
 				{2, 4, 0, 0},
 				{2, 4, 0, 8},
@@ -109,10 +110,116 @@ func TestMove(t *testing.T) {
 				newTile:  true,
 			},
 		},
+		{
+			name: "Filled board",
+			board: [][]uint{
+				{2, 4, 2, 4},
+				{2, 4, 2, 4},
+				{2, 4, 2, 4},
+				{2, 4, 2, 4},
+			},
+			down: moveRes{
+				want: [][]uint{
+					{0, 0, 0, 0},
+					{0, 0, 0, 0},
+					{4, 8, 4, 8},
+					{4, 8, 4, 8},
+				},
+				score:    48,
+				gameOver: false,
+				newTile:  true,
+			},
+			up: moveRes{
+				want: [][]uint{
+					{4, 8, 4, 8},
+					{4, 8, 4, 8},
+					{0, 0, 0, 0},
+					{0, 0, 0, 0},
+				},
+				score:    48,
+				gameOver: false,
+				newTile:  true,
+			},
+			left: moveRes{
+				want: [][]uint{
+					{2, 4, 2, 4},
+					{2, 4, 2, 4},
+					{2, 4, 2, 4},
+					{2, 4, 2, 4},
+				},
+				score:    0,
+				gameOver: false,
+				newTile:  false,
+			},
+			right: moveRes{
+				want: [][]uint{
+					{2, 4, 2, 4},
+					{2, 4, 2, 4},
+					{2, 4, 2, 4},
+					{2, 4, 2, 4},
+				},
+				score:    0,
+				gameOver: false,
+				newTile:  false,
+			},
+		},
+		{
+			name: "Game over board",
+			board: [][]uint{
+				{64, 8, 16, 8},
+				{64, 16, 8, 16},
+				{32, 8, 16, 8},
+				{8, 16, 8, 16},
+			},
+			down: moveRes{
+				want: [][]uint{
+					{0, 8, 16, 8},
+					{128, 16, 8, 16},
+					{32, 8, 16, 8},
+					{8, 16, 8, 16},
+				},
+				score:    128,
+				gameOver: true,
+				newTile:  true,
+			},
+			up: moveRes{
+				want: [][]uint{
+					{128, 8, 16, 8},
+					{32, 16, 8, 16},
+					{8, 8, 16, 8},
+					{0, 16, 8, 16},
+				},
+				score:    128,
+				gameOver: false,
+				newTile:  true,
+			},
+			left: moveRes{
+				want: [][]uint{
+					{64, 8, 16, 8},
+					{64, 16, 8, 16},
+					{32, 8, 16, 8},
+					{8, 16, 8, 16},
+				},
+				score:    0,
+				gameOver: false,
+				newTile:  false,
+			},
+			right: moveRes{
+				want: [][]uint{
+					{64, 8, 16, 8},
+					{64, 16, 8, 16},
+					{32, 8, 16, 8},
+					{8, 16, 8, 16},
+				},
+				score:    0,
+				gameOver: false,
+				newTile:  false,
+			},
+		},
 	}
 
-	for i, test := range tests {
-		t.Run(fmt.Sprintf("TC %d", i), func(t *testing.T) {
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
 			g := &game{board: clone(test.board)}
 			gameOver := g.MoveDown()
 			assertMoveRes(t, g.board, test.down.want, gameOver, test.down.gameOver, test.down.newTile, g.score, test.down.score)
@@ -136,7 +243,7 @@ func assertMoveRes(t *testing.T, gotBoard, wantBoard [][]uint, gotGameOver, want
 	t.Helper()
 
 	if gotGameOver != wantGameOver {
-		t.Fatalf("Game should not be over")
+		t.Fatalf("Invalid game over. got %t, want %t", gotGameOver, wantGameOver)
 	}
 
 	var diffs []uint
