@@ -54,6 +54,8 @@ func TestMove(t *testing.T) {
 		board [][]uint
 		down  moveRes
 		up    moveRes
+		left  moveRes
+		right moveRes
 	}{
 		{
 			board: [][]uint{
@@ -84,18 +86,48 @@ func TestMove(t *testing.T) {
 				gameOver: false,
 				newTile:  true,
 			},
+			left: moveRes{
+				want: [][]uint{
+					{2, 4, 0, 0},
+					{2, 4, 8, 0},
+					{2, 4, 0, 0},
+					{2, 4, 0, 0},
+				},
+				score:    0,
+				gameOver: false,
+				newTile:  true,
+			},
+			right: moveRes{
+				want: [][]uint{
+					{0, 0, 2, 4},
+					{0, 2, 4, 8},
+					{0, 0, 2, 4},
+					{0, 0, 2, 4},
+				},
+				score:    0,
+				gameOver: false,
+				newTile:  true,
+			},
 		},
 	}
 
-	g := &game{}
-
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("TC %d", i), func(t *testing.T) {
-			g.board = test.board
-
+			g := &game{board: clone(test.board)}
 			gameOver := g.MoveDown()
 			assertMoveRes(t, g.board, test.down.want, gameOver, test.down.gameOver, test.down.newTile, g.score, test.down.score)
 
+			g = &game{board: clone(test.board)}
+			gameOver = g.MoveUp()
+			assertMoveRes(t, g.board, test.up.want, gameOver, test.up.gameOver, test.up.newTile, g.score, test.up.score)
+
+			g = &game{board: clone(test.board)}
+			gameOver = g.MoveLeft()
+			assertMoveRes(t, g.board, test.left.want, gameOver, test.left.gameOver, test.left.newTile, g.score, test.left.score)
+
+			g = &game{board: clone(test.board)}
+			gameOver = g.MoveRight()
+			assertMoveRes(t, g.board, test.right.want, gameOver, test.right.gameOver, test.right.newTile, g.score, test.right.score)
 		})
 	}
 }
@@ -129,4 +161,14 @@ func assertMoveRes(t *testing.T, gotBoard, wantBoard [][]uint, gotGameOver, want
 	if gotScore != wantScore {
 		t.Fatalf("Invalid score. got %d, want %d", gotScore, wantScore)
 	}
+}
+
+func clone(source [][]uint) [][]uint {
+	dest := newBoard()
+	for j, row := range source {
+		for i, val := range row {
+			dest[j][i] = val
+		}
+	}
+	return dest
 }
