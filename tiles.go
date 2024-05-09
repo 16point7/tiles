@@ -164,22 +164,28 @@ func nextRight(board [][]uint, j, i, lastCapturedJ int) int {
 }
 
 func newTile(board [][]uint) {
-	for {
-		r := rand.Intn(area)
-		j := r / length
-		i := r % length
+	vacancies := [area]struct {
+		j int
+		i int
+	}{}
+	v := 0
 
-		if board[j][i] != 0 {
-			continue
+	for j, row := range board {
+		for i, val := range row {
+			if val == 0 {
+				vacancies[v].j = j
+				vacancies[v].i = i
+				v++
+			}
 		}
+	}
 
-		if rand.Float64() < 0.1 {
-			board[j][i] = 4
-		} else {
-			board[j][i] = 2
-		}
+	vacancy := vacancies[rand.Intn(v)]
 
-		break
+	if rand.Float64() < 0.1 {
+		board[vacancy.j][vacancy.i] = 4
+	} else {
+		board[vacancy.j][vacancy.i] = 2
 	}
 }
 
