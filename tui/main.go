@@ -22,10 +22,14 @@ func main() {
 	style := tcell.StyleDefault
 	s.SetStyle(style)
 
-	s.SetContent(0, 0, 'T', nil, style)
+	drawBoard(s, style)
 
 	s.Show()
 	time.Sleep(3 * time.Second)
 
 	s.Fini()
+}
+
+func drawBoard(s tcell.Screen, style tcell.Style) {
+	s.SetContent(0, 0, 'T', nil, style)
 }
