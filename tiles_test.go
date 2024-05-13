@@ -12,12 +12,12 @@ func TestNewGame(t *testing.T) {
 	}
 
 	if len(g.board) != 4 {
-		t.Fatalf("Invalid number of rows. got %d, want %d", len(g.board), length)
+		t.Fatalf("Invalid number of rows. got %d, want %d", len(g.board), Length)
 	}
 
 	for j, row := range g.board {
-		if len(row) != length {
-			t.Fatalf("Row %d has invalid number of columns. got %d, want %d", j, len(row), length)
+		if len(row) != Length {
+			t.Fatalf("Row %d has invalid number of columns. got %d, want %d", j, len(row), Length)
 		}
 	}
 

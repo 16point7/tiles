@@ -18,9 +18,9 @@ func (g *game) MoveDown() (gameOver bool) {
 }
 
 func moveDown(board [][]uint) (score uint, moved bool) {
-	for i := 0; i < length; i++ {
+	for i := 0; i < Length; i++ {
 		lastCapturedJ := -1
-		for j := length - 1; j > -1; j-- {
+		for j := Length - 1; j > -1; j-- {
 			nextJ := nextDown(board, j, i, lastCapturedJ)
 			if nextJ == j {
 				continue
@@ -40,7 +40,7 @@ func moveDown(board [][]uint) (score uint, moved bool) {
 
 func nextDown(board [][]uint, j, i, lastCapturedJ int) int {
 	nextJ := j + 1
-	for nextJ < length && (board[nextJ][i] == 0 || j != lastCapturedJ && board[nextJ][i] == board[j][i]) {
+	for nextJ < Length && (board[nextJ][i] == 0 || j != lastCapturedJ && board[nextJ][i] == board[j][i]) {
 		nextJ++
 	}
 	return nextJ - 1
@@ -57,9 +57,9 @@ func (g *game) MoveUp() (gameOver bool) {
 }
 
 func moveUp(board [][]uint) (score uint, moved bool) {
-	for i := 0; i < length; i++ {
+	for i := 0; i < Length; i++ {
 		lastCapturedJ := -1
-		for j := 0; j < length; j++ {
+		for j := 0; j < Length; j++ {
 			nextJ := nextUp(board, j, i, lastCapturedJ)
 			if nextJ == j {
 				continue
@@ -96,9 +96,9 @@ func (g *game) MoveLeft() (gameOver bool) {
 }
 
 func moveLeft(board [][]uint) (score uint, moved bool) {
-	for j := 0; j < length; j++ {
+	for j := 0; j < Length; j++ {
 		lastCapturedJ := -1
-		for i := 0; i < length; i++ {
+		for i := 0; i < Length; i++ {
 			nextI := nextLeft(board, j, i, lastCapturedJ)
 			if nextI == i {
 				continue
@@ -135,9 +135,9 @@ func (g *game) MoveRight() (gameOver bool) {
 }
 
 func moveRight(board [][]uint) (score uint, moved bool) {
-	for j := 0; j < length; j++ {
+	for j := 0; j < Length; j++ {
 		lastCapturedJ := -1
-		for i := length - 1; i > -1; i-- {
+		for i := Length - 1; i > -1; i-- {
 			nextI := nextRight(board, j, i, lastCapturedJ)
 			if nextI == i {
 				continue
@@ -157,14 +157,14 @@ func moveRight(board [][]uint) (score uint, moved bool) {
 
 func nextRight(board [][]uint, j, i, lastCapturedJ int) int {
 	nextI := i + 1
-	for nextI < length && (board[j][nextI] == 0 || j != lastCapturedJ && board[j][nextI] == board[j][i]) {
+	for nextI < Length && (board[j][nextI] == 0 || j != lastCapturedJ && board[j][nextI] == board[j][i]) {
 		nextI++
 	}
 	return nextI - 1
 }
 
 func newTile(board [][]uint) {
-	vacancies := [area]struct {
+	vacancies := [Length * Length]struct {
 		j int
 		i int
 	}{}
@@ -190,8 +190,8 @@ func newTile(board [][]uint) {
 }
 
 func isTerminal(board [][]uint) bool {
-	for j := 1; j < length-1; j++ {
-		for i := 1; i < length-1; i++ {
+	for j := 1; j < Length-1; j++ {
+		for i := 1; i < Length-1; i++ {
 			if val := board[j][i]; val == board[j+1][i] || val == board[j-1][i] || val == board[j][i+1] || val == board[j][i-1] {
 				return false
 			}
@@ -209,16 +209,13 @@ func NewGame() *game {
 	}
 }
 
-const (
-	length = 4
-	area   = length * length
-)
+const Length = 4
 
 func newBoard() [][]uint {
-	temp := make([]uint, area)
-	board := make([][]uint, length)
+	temp := make([]uint, Length*Length)
+	board := make([][]uint, Length)
 	for j := range board {
-		board[j], temp = temp[:length], temp[length:]
+		board[j], temp = temp[:Length], temp[Length:]
 	}
 	return board
 }
