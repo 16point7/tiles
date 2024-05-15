@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/16point7/tiles"
 	"github.com/gdamore/tcell"
@@ -19,17 +18,39 @@ func main() {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}
+	defer s.Fini()
 
 	style := tcell.StyleDefault
 	s.SetStyle(style)
 
 	g := tiles.NewGame()
-	drawBoard(s, style, g.Board)
 
-	s.Show()
-	time.Sleep(2 * time.Second)
+	for {
+		drawBoard(s, style, g.Board)
+		s.Show()
 
-	s.Fini()
+		var gameOver bool
+
+		switch ev := s.PollEvent().(type) {
+		case *tcell.EventKey:
+			switch ev.Key() {
+			case tcell.KeyLeft:
+				gameOver = g.MoveLeft()
+			case tcell.KeyRight:
+				gameOver = g.MoveRight()
+			case tcell.KeyUp:
+				gameOver = g.MoveUp()
+			case tcell.KeyDown:
+				gameOver = g.MoveDown()
+			case tcell.KeyEscape:
+				gameOver = true
+			}
+		}
+
+		if gameOver {
+			return
+		}
+	}
 }
 
 func drawBoard(s tcell.Screen, style tcell.Style, board [][]uint) {
