@@ -3,24 +3,24 @@ package tiles
 import "math/rand"
 
 type game struct {
-	board [][]uint
+	Board [][]uint
 	score uint
 }
 
 func (g *game) MoveDown() (gameOver bool) {
-	score, moved := moveDown(g.board)
+	score, moved := moveDown(g.Board)
 	g.score += score
 	if moved {
-		newTile(g.board)
-		gameOver = isTerminal(g.board)
+		newTile(g.Board)
+		gameOver = isTerminal(g.Board)
 	}
 	return
 }
 
 func moveDown(board [][]uint) (score uint, moved bool) {
-	for i := 0; i < Length; i++ {
+	for i := 0; i < Side; i++ {
 		lastCapturedJ := -1
-		for j := Length - 1; j > -1; j-- {
+		for j := Side - 1; j > -1; j-- {
 			nextJ := nextDown(board, j, i, lastCapturedJ)
 			if nextJ == j {
 				continue
@@ -40,26 +40,26 @@ func moveDown(board [][]uint) (score uint, moved bool) {
 
 func nextDown(board [][]uint, j, i, lastCapturedJ int) int {
 	nextJ := j + 1
-	for nextJ < Length && (board[nextJ][i] == 0 || j != lastCapturedJ && board[nextJ][i] == board[j][i]) {
+	for nextJ < Side && (board[nextJ][i] == 0 || j != lastCapturedJ && board[nextJ][i] == board[j][i]) {
 		nextJ++
 	}
 	return nextJ - 1
 }
 
 func (g *game) MoveUp() (gameOver bool) {
-	score, moved := moveUp(g.board)
+	score, moved := moveUp(g.Board)
 	g.score += score
 	if moved {
-		newTile(g.board)
-		gameOver = isTerminal(g.board)
+		newTile(g.Board)
+		gameOver = isTerminal(g.Board)
 	}
 	return
 }
 
 func moveUp(board [][]uint) (score uint, moved bool) {
-	for i := 0; i < Length; i++ {
+	for i := 0; i < Side; i++ {
 		lastCapturedJ := -1
-		for j := 0; j < Length; j++ {
+		for j := 0; j < Side; j++ {
 			nextJ := nextUp(board, j, i, lastCapturedJ)
 			if nextJ == j {
 				continue
@@ -86,19 +86,19 @@ func nextUp(board [][]uint, j, i, lastCapturedJ int) int {
 }
 
 func (g *game) MoveLeft() (gameOver bool) {
-	score, moved := moveLeft(g.board)
+	score, moved := moveLeft(g.Board)
 	g.score += score
 	if moved {
-		newTile(g.board)
-		gameOver = isTerminal(g.board)
+		newTile(g.Board)
+		gameOver = isTerminal(g.Board)
 	}
 	return
 }
 
 func moveLeft(board [][]uint) (score uint, moved bool) {
-	for j := 0; j < Length; j++ {
+	for j := 0; j < Side; j++ {
 		lastCapturedJ := -1
-		for i := 0; i < Length; i++ {
+		for i := 0; i < Side; i++ {
 			nextI := nextLeft(board, j, i, lastCapturedJ)
 			if nextI == i {
 				continue
@@ -125,19 +125,19 @@ func nextLeft(board [][]uint, j, i, lastCapturedJ int) int {
 }
 
 func (g *game) MoveRight() (gameOver bool) {
-	score, moved := moveRight(g.board)
+	score, moved := moveRight(g.Board)
 	g.score += score
 	if moved {
-		newTile(g.board)
-		gameOver = isTerminal(g.board)
+		newTile(g.Board)
+		gameOver = isTerminal(g.Board)
 	}
 	return
 }
 
 func moveRight(board [][]uint) (score uint, moved bool) {
-	for j := 0; j < Length; j++ {
+	for j := 0; j < Side; j++ {
 		lastCapturedJ := -1
-		for i := Length - 1; i > -1; i-- {
+		for i := Side - 1; i > -1; i-- {
 			nextI := nextRight(board, j, i, lastCapturedJ)
 			if nextI == i {
 				continue
@@ -157,14 +157,14 @@ func moveRight(board [][]uint) (score uint, moved bool) {
 
 func nextRight(board [][]uint, j, i, lastCapturedJ int) int {
 	nextI := i + 1
-	for nextI < Length && (board[j][nextI] == 0 || j != lastCapturedJ && board[j][nextI] == board[j][i]) {
+	for nextI < Side && (board[j][nextI] == 0 || j != lastCapturedJ && board[j][nextI] == board[j][i]) {
 		nextI++
 	}
 	return nextI - 1
 }
 
 func newTile(board [][]uint) {
-	vacancies := [Length * Length]struct {
+	vacancies := [Side * Side]struct {
 		j int
 		i int
 	}{}
@@ -190,8 +190,8 @@ func newTile(board [][]uint) {
 }
 
 func isTerminal(board [][]uint) bool {
-	for j := 1; j < Length-1; j++ {
-		for i := 1; i < Length-1; i++ {
+	for j := 1; j < Side-1; j++ {
+		for i := 1; i < Side-1; i++ {
 			if val := board[j][i]; val == board[j+1][i] || val == board[j-1][i] || val == board[j][i+1] || val == board[j][i-1] {
 				return false
 			}
@@ -204,18 +204,19 @@ func NewGame() *game {
 	board := newBoard()
 	initialize(board)
 	return &game{
-		board: board,
+		Board: board,
 		score: 0,
 	}
 }
 
-const Length = 4
+// Side of game board is Side X Side cells
+const Side = 4
 
 func newBoard() [][]uint {
-	temp := make([]uint, Length*Length)
-	board := make([][]uint, Length)
+	temp := make([]uint, Side*Side)
+	board := make([][]uint, Side)
 	for j := range board {
-		board[j], temp = temp[:Length], temp[Length:]
+		board[j], temp = temp[:Side], temp[Side:]
 	}
 	return board
 }

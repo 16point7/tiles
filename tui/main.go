@@ -23,27 +23,28 @@ func main() {
 	style := tcell.StyleDefault
 	s.SetStyle(style)
 
-	drawBoard(s, style)
+	g := tiles.NewGame()
+	drawBoard(s, style, g.Board)
 
 	s.Show()
-	time.Sleep(10 * time.Second)
+	time.Sleep(2 * time.Second)
 
 	s.Fini()
 }
 
-func drawBoard(s tcell.Screen, style tcell.Style) {
+func drawBoard(s tcell.Screen, style tcell.Style, board [][]uint) {
 	y := 0
 
 	drawLine(s, style, y, tcell.RuneULCorner, tcell.RuneHLine, tcell.RuneTTee, tcell.RuneURCorner)
 	y++
 
-	for j := 0; j < tiles.Length-1; j++ {
-		drawData(s, style, y)
+	for j := 0; j < tiles.Side-1; j++ {
+		drawData(s, style, y, board[j])
 		y++
 		drawLine(s, style, y, tcell.RuneLTee, tcell.RuneHLine, tcell.RunePlus, tcell.RuneRTee)
 		y++
 	}
-	drawData(s, style, y)
+	drawData(s, style, y, board[tiles.Side-1])
 	y++
 
 	drawLine(s, style, y, tcell.RuneLLCorner, tcell.RuneHLine, tcell.RuneBTee, tcell.RuneLRCorner)
@@ -57,7 +58,7 @@ func drawLine(s tcell.Screen, style tcell.Style, y int, lb, fill, div, rb rune) 
 	s.SetContent(x, y, lb, nil, style)
 	x++
 
-	for c := 0; c < tiles.Length-1; c++ {
+	for t := 0; t < tiles.Side-1; t++ {
 		for k := 0; k < cellWidth; k++ {
 			s.SetContent(x, y, fill, nil, style)
 			x++
@@ -73,23 +74,54 @@ func drawLine(s tcell.Screen, style tcell.Style, y int, lb, fill, div, rb rune) 
 	s.SetContent(x, y, rb, nil, style)
 }
 
-func drawData(s tcell.Screen, style tcell.Style, y int) {
+func drawData(s tcell.Screen, style tcell.Style, y int, row []uint) {
 	x := 0
 
 	s.SetContent(x, y, tcell.RuneVLine, nil, style)
 	x++
 
-	for c := 0; c < tiles.Length; c++ {
-		for i := 0; i < cellWidth/2; i++ {
+	for t := 0; t < tiles.Side; t++ {
+		str := [cellWidth]rune{}
+		len := 0
+
+		num := row[t]
+		for {
+			str[len] = '0' + rune((num % 10))
+			num /= 10
+			len++
+			if num == 0 {
+				break
+			}
+		}
+
+		var left int
+		if len%2 == 0 {
+			left = cellWidth/2 - (len/2 - 1)
+		} else {
+			left = cellWidth/2 - (len-1)/2
+		}
+
+		i := 0
+
+		for i < left {
 			s.SetContent(x, y, ' ', nil, style)
 			x++
+			i++
 		}
-		s.SetContent(x, y, 'D', nil, style)
-		x++
-		for i := 0; i < cellWidth/2; i++ {
+
+		for len > 0 {
+			len--
+			s.SetContent(x, y, str[len], nil, style)
+			x++
+			i++
+		}
+
+		for i < cellWidth {
 			s.SetContent(x, y, ' ', nil, style)
 			x++
+			i++
 		}
+
 		s.SetContent(x, y, tcell.RuneVLine, nil, style)
 		x++
 	}

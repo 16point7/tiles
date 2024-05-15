@@ -11,18 +11,18 @@ func TestNewGame(t *testing.T) {
 		t.Fatalf("New game must have score of 0. got %d", g.score)
 	}
 
-	if len(g.board) != 4 {
-		t.Fatalf("Invalid number of rows. got %d, want %d", len(g.board), Length)
+	if len(g.Board) != 4 {
+		t.Fatalf("Invalid number of rows. got %d, want %d", len(g.Board), Side)
 	}
 
-	for j, row := range g.board {
-		if len(row) != Length {
-			t.Fatalf("Row %d has invalid number of columns. got %d, want %d", j, len(row), Length)
+	for j, row := range g.Board {
+		if len(row) != Side {
+			t.Fatalf("Row %d has invalid number of columns. got %d, want %d", j, len(row), Side)
 		}
 	}
 
 	var initVals []uint
-	for _, row := range g.board {
+	for _, row := range g.Board {
 		for _, val := range row {
 			if val != 0 {
 				initVals = append(initVals, val)
@@ -220,21 +220,21 @@ func TestMove(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			g := &game{board: clone(test.board)}
+			g := &game{Board: clone(test.board)}
 			gameOver := g.MoveDown()
-			assertMoveRes(t, g.board, test.down.want, gameOver, test.down.gameOver, test.down.newTile, g.score, test.down.score)
+			assertMoveRes(t, g.Board, test.down.want, gameOver, test.down.gameOver, test.down.newTile, g.score, test.down.score)
 
-			g = &game{board: clone(test.board)}
+			g = &game{Board: clone(test.board)}
 			gameOver = g.MoveUp()
-			assertMoveRes(t, g.board, test.up.want, gameOver, test.up.gameOver, test.up.newTile, g.score, test.up.score)
+			assertMoveRes(t, g.Board, test.up.want, gameOver, test.up.gameOver, test.up.newTile, g.score, test.up.score)
 
-			g = &game{board: clone(test.board)}
+			g = &game{Board: clone(test.board)}
 			gameOver = g.MoveLeft()
-			assertMoveRes(t, g.board, test.left.want, gameOver, test.left.gameOver, test.left.newTile, g.score, test.left.score)
+			assertMoveRes(t, g.Board, test.left.want, gameOver, test.left.gameOver, test.left.newTile, g.score, test.left.score)
 
-			g = &game{board: clone(test.board)}
+			g = &game{Board: clone(test.board)}
 			gameOver = g.MoveRight()
-			assertMoveRes(t, g.board, test.right.want, gameOver, test.right.gameOver, test.right.newTile, g.score, test.right.score)
+			assertMoveRes(t, g.Board, test.right.want, gameOver, test.right.gameOver, test.right.newTile, g.score, test.right.score)
 		})
 	}
 }
