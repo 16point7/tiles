@@ -44,6 +44,11 @@ func main() {
 				gameOver = g.MoveDown()
 			case tcell.KeyEscape:
 				gameOver = true
+			case tcell.KeyRune:
+				if ev.Rune() == 'r' {
+					g.Reset()
+					s.Clear()
+				}
 			}
 		}
 

@@ -103,14 +103,14 @@ func (g *game) MoveLeft() (gameOver bool) {
 
 func moveLeft(board [][]uint) (score uint, moved bool) {
 	for j := 0; j < Side; j++ {
-		lastCapturedJ := -1
+		lastCapturedI := -1
 		for i := 0; i < Side; i++ {
-			nextI := nextLeft(board, j, i, lastCapturedJ)
+			nextI := nextLeft(board, j, i, lastCapturedI)
 			if nextI == i {
 				continue
 			}
 			if board[j][nextI] == board[j][i] {
-				lastCapturedJ = nextI
+				lastCapturedI = nextI
 				score += board[j][nextI] * 2
 				board[j][nextI], board[j][i] = board[j][nextI]*2, 0
 			} else {
@@ -122,12 +122,12 @@ func moveLeft(board [][]uint) (score uint, moved bool) {
 	return
 }
 
-func nextLeft(board [][]uint, j, i, lastCapturedJ int) int {
+func nextLeft(board [][]uint, j, i, lastCapturedI int) int {
 	if board[j][i] == 0 {
 		return i
 	}
 	nextI := i - 1
-	for nextI > -1 && (board[j][nextI] == 0 || j != lastCapturedJ && board[j][nextI] == board[j][i]) {
+	for nextI > -1 && (board[j][nextI] == 0 || i != lastCapturedI && board[j][nextI] == board[j][i]) {
 		nextI--
 	}
 	return nextI + 1
@@ -164,12 +164,12 @@ func moveRight(board [][]uint) (score uint, moved bool) {
 	return
 }
 
-func nextRight(board [][]uint, j, i, lastCapturedJ int) int {
+func nextRight(board [][]uint, j, i, lastCapturedI int) int {
 	if board[j][i] == 0 {
 		return i
 	}
 	nextI := i + 1
-	for nextI < Side && (board[j][nextI] == 0 || j != lastCapturedJ && board[j][nextI] == board[j][i]) {
+	for nextI < Side && (board[j][nextI] == 0 || i != lastCapturedI && board[j][nextI] == board[j][i]) {
 		nextI++
 	}
 	return nextI - 1
@@ -254,4 +254,14 @@ func initialize(board [][]uint) {
 	for i := 0; i < numInitVals; i++ {
 		newTile(board)
 	}
+}
+
+func (g *game) Reset() {
+	for _, row := range g.Board {
+		for i := range row {
+			row[i] = 0
+		}
+	}
+	initialize(g.Board)
+	g.Score = 0
 }

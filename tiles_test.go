@@ -8,6 +8,12 @@ import (
 func TestNewGame(t *testing.T) {
 	g := NewGame()
 
+	assertNewGame(t, g)
+}
+
+func assertNewGame(t *testing.T, g *game) {
+	t.Helper()
+
 	if g.Score != 0 {
 		t.Fatalf("New game must have score of 0. got %d", g.Score)
 	}
@@ -112,7 +118,7 @@ func TestMove(t *testing.T) {
 			},
 		},
 		{
-			name: "Filled board",
+			name: "Vertically filled board",
 			board: [][]uint{
 				{2, 4, 2, 4},
 				{2, 4, 2, 4},
@@ -162,6 +168,59 @@ func TestMove(t *testing.T) {
 				score:    0,
 				gameOver: false,
 				newTile:  false,
+			},
+		},
+		{
+			name: "Horizontally filled board",
+			board: [][]uint{
+				{2, 2, 2, 2},
+				{4, 4, 4, 4},
+				{2, 2, 2, 2},
+				{4, 4, 4, 4},
+			},
+			down: moveRes{
+				want: [][]uint{
+					{2, 2, 2, 2},
+					{4, 4, 4, 4},
+					{2, 2, 2, 2},
+					{4, 4, 4, 4},
+				},
+				score:    0,
+				gameOver: false,
+				newTile:  false,
+			},
+			up: moveRes{
+				want: [][]uint{
+					{2, 2, 2, 2},
+					{4, 4, 4, 4},
+					{2, 2, 2, 2},
+					{4, 4, 4, 4},
+				},
+				score:    0,
+				gameOver: false,
+				newTile:  false,
+			},
+			left: moveRes{
+				want: [][]uint{
+					{4, 4, 0, 0},
+					{8, 8, 0, 0},
+					{4, 4, 0, 0},
+					{8, 8, 0, 0},
+				},
+				score:    48,
+				gameOver: false,
+				newTile:  true,
+			},
+			right: moveRes{
+				want: [][]uint{
+					{0, 0, 4, 4},
+					{0, 0, 8, 8},
+					{0, 0, 4, 4},
+					{0, 0, 8, 8},
+				},
+				score:    48,
+				gameOver: false,
+				newTile:  true,
 			},
 		},
 		{
@@ -387,4 +446,28 @@ func TestIsTerminal(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestReset(t *testing.T) {
+	g := &game{
+		Board: [][]uint{
+			{2, 2, 2, 2},
+			{4, 4, 4, 4},
+			{8, 8, 8, 8},
+			{16, 16, 16, 16},
+		},
+		Score: 0,
+	}
+
+	g.MoveLeft()
+
+	var scoreWant uint = 120
+
+	if g.Score != scoreWant {
+		t.Fatalf("Invalid score after move. got %d, want %d", g.Score, scoreWant)
+	}
+
+	g.Reset()
+
+	assertNewGame(t, g)
 }
