@@ -236,7 +236,7 @@ func NewGame() *game {
 	}
 }
 
-// Side of game board is Side X Side cells
+// Size of game board is Side X Side cells
 const Side = 4
 
 func newBoard() [][]uint {
