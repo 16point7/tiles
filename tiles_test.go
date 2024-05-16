@@ -8,8 +8,8 @@ import (
 func TestNewGame(t *testing.T) {
 	g := NewGame()
 
-	if g.score != 0 {
-		t.Fatalf("New game must have score of 0. got %d", g.score)
+	if g.Score != 0 {
+		t.Fatalf("New game must have score of 0. got %d", g.Score)
 	}
 
 	if len(g.Board) != 4 {
@@ -276,19 +276,19 @@ func TestMove(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			g := &game{Board: clone(test.board)}
 			gameOver := g.MoveDown()
-			assertMoveRes(t, g.Board, test.down.want, gameOver, test.down.gameOver, test.down.newTile, g.score, test.down.score)
+			assertMoveRes(t, g.Board, test.down.want, gameOver, test.down.gameOver, test.down.newTile, g.Score, test.down.score)
 
 			g = &game{Board: clone(test.board)}
 			gameOver = g.MoveUp()
-			assertMoveRes(t, g.Board, test.up.want, gameOver, test.up.gameOver, test.up.newTile, g.score, test.up.score)
+			assertMoveRes(t, g.Board, test.up.want, gameOver, test.up.gameOver, test.up.newTile, g.Score, test.up.score)
 
 			g = &game{Board: clone(test.board)}
 			gameOver = g.MoveLeft()
-			assertMoveRes(t, g.Board, test.left.want, gameOver, test.left.gameOver, test.left.newTile, g.score, test.left.score)
+			assertMoveRes(t, g.Board, test.left.want, gameOver, test.left.gameOver, test.left.newTile, g.Score, test.left.score)
 
 			g = &game{Board: clone(test.board)}
 			gameOver = g.MoveRight()
-			assertMoveRes(t, g.Board, test.right.want, gameOver, test.right.gameOver, test.right.newTile, g.score, test.right.score)
+			assertMoveRes(t, g.Board, test.right.want, gameOver, test.right.gameOver, test.right.newTile, g.Score, test.right.score)
 		})
 	}
 }

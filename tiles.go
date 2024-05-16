@@ -4,12 +4,12 @@ import "math/rand"
 
 type game struct {
 	Board [][]uint
-	score uint
+	Score uint
 }
 
 func (g *game) MoveDown() (gameOver bool) {
 	score, moved := moveDown(g.Board)
-	g.score += score
+	g.Score += score
 	if moved {
 		newTile(g.Board)
 		gameOver = isTerminal(g.Board)
@@ -51,7 +51,7 @@ func nextDown(board [][]uint, j, i, lastCapturedJ int) int {
 
 func (g *game) MoveUp() (gameOver bool) {
 	score, moved := moveUp(g.Board)
-	g.score += score
+	g.Score += score
 	if moved {
 		newTile(g.Board)
 		gameOver = isTerminal(g.Board)
@@ -93,7 +93,7 @@ func nextUp(board [][]uint, j, i, lastCapturedJ int) int {
 
 func (g *game) MoveLeft() (gameOver bool) {
 	score, moved := moveLeft(g.Board)
-	g.score += score
+	g.Score += score
 	if moved {
 		newTile(g.Board)
 		gameOver = isTerminal(g.Board)
@@ -135,7 +135,7 @@ func nextLeft(board [][]uint, j, i, lastCapturedJ int) int {
 
 func (g *game) MoveRight() (gameOver bool) {
 	score, moved := moveRight(g.Board)
-	g.score += score
+	g.Score += score
 	if moved {
 		newTile(g.Board)
 		gameOver = isTerminal(g.Board)
@@ -232,7 +232,7 @@ func NewGame() *game {
 	initialize(board)
 	return &game{
 		Board: board,
-		score: 0,
+		Score: 0,
 	}
 }
 
