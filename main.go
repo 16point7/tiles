@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/16point7/tiles"
+	"github.com/16point7/tiles/game"
 	"github.com/gdamore/tcell"
 )
 
@@ -23,7 +23,7 @@ func main() {
 	style := tcell.StyleDefault
 	s.SetStyle(style)
 
-	g := tiles.NewGame()
+	g := game.New()
 
 	for {
 		drawState(s, style, g.Board, g.Score, g.GameOver)
@@ -58,13 +58,13 @@ func drawState(s tcell.Screen, style tcell.Style, board [][]uint, score uint, ga
 	drawLine(s, style, y, tcell.RuneULCorner, tcell.RuneHLine, tcell.RuneTTee, tcell.RuneURCorner)
 	y++
 
-	for j := 0; j < tiles.Side-1; j++ {
+	for j := 0; j < game.Side-1; j++ {
 		drawData(s, style, y, board[j])
 		y++
 		drawLine(s, style, y, tcell.RuneLTee, tcell.RuneHLine, tcell.RunePlus, tcell.RuneRTee)
 		y++
 	}
-	drawData(s, style, y, board[tiles.Side-1])
+	drawData(s, style, y, board[game.Side-1])
 	y++
 
 	drawLine(s, style, y, tcell.RuneLLCorner, tcell.RuneHLine, tcell.RuneBTee, tcell.RuneLRCorner)
@@ -84,7 +84,7 @@ func drawLine(s tcell.Screen, style tcell.Style, y int, lb, fill, div, rb rune) 
 	s.SetContent(x, y, lb, nil, style)
 	x++
 
-	for t := 0; t < tiles.Side-1; t++ {
+	for t := 0; t < game.Side-1; t++ {
 		for k := 0; k < cellWidth; k++ {
 			s.SetContent(x, y, fill, nil, style)
 			x++
@@ -127,7 +127,7 @@ func drawData(s tcell.Screen, style tcell.Style, y int, row []uint) {
 	s.SetContent(x, y, tcell.RuneVLine, nil, style)
 	x++
 
-	for t := 0; t < tiles.Side; t++ {
+	for t := 0; t < game.Side; t++ {
 		str := [cellWidth]rune{}
 		len := 0
 

@@ -1,4 +1,4 @@
-package tiles
+package game
 
 import "math/rand"
 
@@ -6,6 +6,43 @@ type game struct {
 	Board    [][]uint
 	Score    uint
 	GameOver bool
+}
+
+func New() *game {
+	board := createBoard()
+	initialize(board)
+	return &game{Board: board}
+}
+
+// Size of game board is Side X Side cells
+const Side = 4
+
+func createBoard() [][]uint {
+	temp := make([]uint, Side*Side)
+	board := make([][]uint, Side)
+	for j := range board {
+		board[j], temp = temp[:Side], temp[Side:]
+	}
+	return board
+}
+
+const numInitVals = 2
+
+func initialize(board [][]uint) {
+	for i := 0; i < numInitVals; i++ {
+		newTile(board)
+	}
+}
+
+func (g *game) Reset() {
+	for _, row := range g.Board {
+		for i := range row {
+			row[i] = 0
+		}
+	}
+	initialize(g.Board)
+	g.Score = 0
+	g.GameOver = false
 }
 
 func (g *game) MoveDown() {
@@ -234,41 +271,4 @@ func isTerminal(board [][]uint) bool {
 	}
 
 	return true
-}
-
-func NewGame() *game {
-	board := newBoard()
-	initialize(board)
-	return &game{Board: board}
-}
-
-// Size of game board is Side X Side cells
-const Side = 4
-
-func newBoard() [][]uint {
-	temp := make([]uint, Side*Side)
-	board := make([][]uint, Side)
-	for j := range board {
-		board[j], temp = temp[:Side], temp[Side:]
-	}
-	return board
-}
-
-const numInitVals = 2
-
-func initialize(board [][]uint) {
-	for i := 0; i < numInitVals; i++ {
-		newTile(board)
-	}
-}
-
-func (g *game) Reset() {
-	for _, row := range g.Board {
-		for i := range row {
-			row[i] = 0
-		}
-	}
-	initialize(g.Board)
-	g.Score = 0
-	g.GameOver = false
 }

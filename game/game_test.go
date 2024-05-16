@@ -1,12 +1,36 @@
-package tiles
+package game
 
 import (
 	"fmt"
 	"testing"
 )
 
-func TestNewGame(t *testing.T) {
-	g := NewGame()
+func TestNew(t *testing.T) {
+	g := New()
+
+	assertNewGame(t, g)
+}
+
+func TestReset(t *testing.T) {
+	g := &game{
+		Board: [][]uint{
+			{2, 2, 2, 2},
+			{4, 4, 4, 4},
+			{8, 8, 8, 8},
+			{16, 16, 16, 16},
+		},
+		Score: 0,
+	}
+
+	g.MoveLeft()
+
+	var scoreWant uint = 120
+
+	if g.Score != scoreWant {
+		t.Fatalf("Invalid score after move. got %d, want %d", g.Score, scoreWant)
+	}
+
+	g.Reset()
 
 	assertNewGame(t, g)
 }
@@ -390,7 +414,7 @@ func assertMoveRes(t *testing.T, gotBoard, wantBoard [][]uint, gotGameOver, want
 }
 
 func clone(source [][]uint) [][]uint {
-	dest := newBoard()
+	dest := createBoard()
 	for j, row := range source {
 		for i, val := range row {
 			dest[j][i] = val
@@ -459,28 +483,4 @@ func TestIsTerminal(t *testing.T) {
 			}
 		})
 	}
-}
-
-func TestReset(t *testing.T) {
-	g := &game{
-		Board: [][]uint{
-			{2, 2, 2, 2},
-			{4, 4, 4, 4},
-			{8, 8, 8, 8},
-			{16, 16, 16, 16},
-		},
-		Score: 0,
-	}
-
-	g.MoveLeft()
-
-	var scoreWant uint = 120
-
-	if g.Score != scoreWant {
-		t.Fatalf("Invalid score after move. got %d, want %d", g.Score, scoreWant)
-	}
-
-	g.Reset()
-
-	assertNewGame(t, g)
 }
