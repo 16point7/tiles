@@ -14,6 +14,10 @@ func TestNewGame(t *testing.T) {
 func assertNewGame(t *testing.T, g *game) {
 	t.Helper()
 
+	if g.GameOver {
+		t.Fatalf("New game must be in progress.")
+	}
+
 	if g.Score != 0 {
 		t.Fatalf("New game must have score of 0. got %d", g.Score)
 	}
@@ -334,20 +338,20 @@ func TestMove(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			g := &game{Board: clone(test.board)}
-			gameOver := g.MoveDown()
-			assertMoveRes(t, g.Board, test.down.want, gameOver, test.down.gameOver, test.down.newTile, g.Score, test.down.score)
+			g.MoveDown()
+			assertMoveRes(t, g.Board, test.down.want, g.GameOver, test.down.gameOver, test.down.newTile, g.Score, test.down.score)
 
 			g = &game{Board: clone(test.board)}
-			gameOver = g.MoveUp()
-			assertMoveRes(t, g.Board, test.up.want, gameOver, test.up.gameOver, test.up.newTile, g.Score, test.up.score)
+			g.MoveUp()
+			assertMoveRes(t, g.Board, test.up.want, g.GameOver, test.up.gameOver, test.up.newTile, g.Score, test.up.score)
 
 			g = &game{Board: clone(test.board)}
-			gameOver = g.MoveLeft()
-			assertMoveRes(t, g.Board, test.left.want, gameOver, test.left.gameOver, test.left.newTile, g.Score, test.left.score)
+			g.MoveLeft()
+			assertMoveRes(t, g.Board, test.left.want, g.GameOver, test.left.gameOver, test.left.newTile, g.Score, test.left.score)
 
 			g = &game{Board: clone(test.board)}
-			gameOver = g.MoveRight()
-			assertMoveRes(t, g.Board, test.right.want, gameOver, test.right.gameOver, test.right.newTile, g.Score, test.right.score)
+			g.MoveRight()
+			assertMoveRes(t, g.Board, test.right.want, g.GameOver, test.right.gameOver, test.right.newTile, g.Score, test.right.score)
 		})
 	}
 }
@@ -433,6 +437,15 @@ func TestIsTerminal(t *testing.T) {
 				{16, 8, 4, 2},
 				{2, 4, 8, 16},
 				{16, 8, 4, 2},
+			},
+			isTerminal: false,
+		},
+		{
+			board: [][]uint{
+				{2, 4, 2, 4},
+				{2, 4, 2, 4},
+				{2, 4, 2, 4},
+				{2, 4, 2, 4},
 			},
 			isTerminal: false,
 		},

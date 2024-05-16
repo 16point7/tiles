@@ -29,21 +29,19 @@ func main() {
 		drawState(s, style, g.Board, g.Score)
 		s.Show()
 
-		var gameOver bool
-
 		switch ev := s.PollEvent().(type) {
 		case *tcell.EventKey:
 			switch ev.Key() {
 			case tcell.KeyLeft:
-				gameOver = g.MoveLeft()
+				g.MoveLeft()
 			case tcell.KeyRight:
-				gameOver = g.MoveRight()
+				g.MoveRight()
 			case tcell.KeyUp:
-				gameOver = g.MoveUp()
+				g.MoveUp()
 			case tcell.KeyDown:
-				gameOver = g.MoveDown()
+				g.MoveDown()
 			case tcell.KeyEscape:
-				gameOver = true
+				return
 			case tcell.KeyRune:
 				if ev.Rune() == 'r' {
 					g.Reset()
@@ -52,7 +50,7 @@ func main() {
 			}
 		}
 
-		if gameOver {
+		if g.GameOver {
 			return
 		}
 	}

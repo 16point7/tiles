@@ -3,18 +3,21 @@ package tiles
 import "math/rand"
 
 type game struct {
-	Board [][]uint
-	Score uint
+	Board    [][]uint
+	Score    uint
+	GameOver bool
 }
 
-func (g *game) MoveDown() (gameOver bool) {
+func (g *game) MoveDown() {
+	if g.GameOver {
+		return
+	}
 	score, moved := moveDown(g.Board)
 	g.Score += score
 	if moved {
 		newTile(g.Board)
-		gameOver = isTerminal(g.Board)
+		g.GameOver = isTerminal(g.Board)
 	}
-	return
 }
 
 func moveDown(board [][]uint) (score uint, moved bool) {
@@ -49,14 +52,16 @@ func nextDown(board [][]uint, j, i, lastCapturedJ int) int {
 	return nextJ - 1
 }
 
-func (g *game) MoveUp() (gameOver bool) {
+func (g *game) MoveUp() {
+	if g.GameOver {
+		return
+	}
 	score, moved := moveUp(g.Board)
 	g.Score += score
 	if moved {
 		newTile(g.Board)
-		gameOver = isTerminal(g.Board)
+		g.GameOver = isTerminal(g.Board)
 	}
-	return
 }
 
 func moveUp(board [][]uint) (score uint, moved bool) {
@@ -91,14 +96,16 @@ func nextUp(board [][]uint, j, i, lastCapturedJ int) int {
 	return nextJ + 1
 }
 
-func (g *game) MoveLeft() (gameOver bool) {
+func (g *game) MoveLeft() {
+	if g.GameOver {
+		return
+	}
 	score, moved := moveLeft(g.Board)
 	g.Score += score
 	if moved {
 		newTile(g.Board)
-		gameOver = isTerminal(g.Board)
+		g.GameOver = isTerminal(g.Board)
 	}
-	return
 }
 
 func moveLeft(board [][]uint) (score uint, moved bool) {
@@ -133,14 +140,16 @@ func nextLeft(board [][]uint, j, i, lastCapturedI int) int {
 	return nextI + 1
 }
 
-func (g *game) MoveRight() (gameOver bool) {
+func (g *game) MoveRight() {
+	if g.GameOver {
+		return
+	}
 	score, moved := moveRight(g.Board)
 	g.Score += score
 	if moved {
 		newTile(g.Board)
-		gameOver = isTerminal(g.Board)
+		g.GameOver = isTerminal(g.Board)
 	}
-	return
 }
 
 func moveRight(board [][]uint) (score uint, moved bool) {
@@ -230,10 +239,7 @@ func isTerminal(board [][]uint) bool {
 func NewGame() *game {
 	board := newBoard()
 	initialize(board)
-	return &game{
-		Board: board,
-		Score: 0,
-	}
+	return &game{Board: board}
 }
 
 // Size of game board is Side X Side cells
@@ -264,4 +270,5 @@ func (g *game) Reset() {
 	}
 	initialize(g.Board)
 	g.Score = 0
+	g.GameOver = false
 }
