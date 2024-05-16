@@ -217,6 +217,59 @@ func TestMove(t *testing.T) {
 				newTile:  false,
 			},
 		},
+		{
+			name: "No movement board",
+			board: [][]uint{
+				{0, 0, 0, 0},
+				{2, 4, 8, 16},
+				{0, 0, 0, 0},
+				{0, 0, 0, 0},
+			},
+			down: moveRes{
+				want: [][]uint{
+					{0, 0, 0, 0},
+					{0, 0, 0, 0},
+					{0, 0, 0, 0},
+					{2, 4, 8, 16},
+				},
+				score:    0,
+				gameOver: false,
+				newTile:  true,
+			},
+			up: moveRes{
+				want: [][]uint{
+					{2, 4, 8, 16},
+					{0, 0, 0, 0},
+					{0, 0, 0, 0},
+					{0, 0, 0, 0},
+				},
+				score:    0,
+				gameOver: false,
+				newTile:  true,
+			},
+			left: moveRes{
+				want: [][]uint{
+					{0, 0, 0, 0},
+					{2, 4, 8, 16},
+					{0, 0, 0, 0},
+					{0, 0, 0, 0},
+				},
+				score:    0,
+				gameOver: false,
+				newTile:  false,
+			},
+			right: moveRes{
+				want: [][]uint{
+					{0, 0, 0, 0},
+					{2, 4, 8, 16},
+					{0, 0, 0, 0},
+					{0, 0, 0, 0},
+				},
+				score:    0,
+				gameOver: false,
+				newTile:  false,
+			},
+		},
 	}
 
 	for _, test := range tests {
@@ -258,6 +311,8 @@ func assertMoveRes(t *testing.T, gotBoard, wantBoard [][]uint, gotGameOver, want
 
 	if newTile && len(diffs) != 1 {
 		t.Fatalf("Invalid number of new values added after move. got %d, want 1", len(diffs))
+	} else if !newTile && len(diffs) != 0 {
+		t.Fatalf("Invalid number of new values added after move. got %d, want 0", len(diffs))
 	}
 
 	for _, val := range diffs {

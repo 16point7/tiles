@@ -39,6 +39,9 @@ func moveDown(board [][]uint) (score uint, moved bool) {
 }
 
 func nextDown(board [][]uint, j, i, lastCapturedJ int) int {
+	if board[j][i] == 0 {
+		return j
+	}
 	nextJ := j + 1
 	for nextJ < Side && (board[nextJ][i] == 0 || j != lastCapturedJ && board[nextJ][i] == board[j][i]) {
 		nextJ++
@@ -78,6 +81,9 @@ func moveUp(board [][]uint) (score uint, moved bool) {
 }
 
 func nextUp(board [][]uint, j, i, lastCapturedJ int) int {
+	if board[j][i] == 0 {
+		return j
+	}
 	nextJ := j - 1
 	for nextJ > -1 && (board[nextJ][i] == 0 || j != lastCapturedJ && board[nextJ][i] == board[j][i]) {
 		nextJ--
@@ -117,6 +123,9 @@ func moveLeft(board [][]uint) (score uint, moved bool) {
 }
 
 func nextLeft(board [][]uint, j, i, lastCapturedJ int) int {
+	if board[j][i] == 0 {
+		return i
+	}
 	nextI := i - 1
 	for nextI > -1 && (board[j][nextI] == 0 || j != lastCapturedJ && board[j][nextI] == board[j][i]) {
 		nextI--
@@ -156,6 +165,9 @@ func moveRight(board [][]uint) (score uint, moved bool) {
 }
 
 func nextRight(board [][]uint, j, i, lastCapturedJ int) int {
+	if board[j][i] == 0 {
+		return i
+	}
 	nextI := i + 1
 	for nextI < Side && (board[j][nextI] == 0 || j != lastCapturedJ && board[j][nextI] == board[j][i]) {
 		nextI++
