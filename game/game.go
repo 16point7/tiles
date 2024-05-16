@@ -21,6 +21,7 @@ func createBoard() [][]uint {
 	temp := make([]uint, Side*Side)
 	board := make([][]uint, Side)
 	for j := range board {
+		// board backed by 1D slice
 		board[j], temp = temp[:Side], temp[Side:]
 	}
 	return board
@@ -59,6 +60,7 @@ func (g *game) MoveDown() {
 
 func moveDown(board [][]uint) (score uint, moved bool) {
 	for i := 0; i < Side; i++ {
+		// "null" value
 		lastCapturedJ := -1
 		for j := Side - 1; j > -1; j-- {
 			nextJ := nextDown(board, j, i, lastCapturedJ)
@@ -83,6 +85,7 @@ func nextDown(board [][]uint, j, i, lastCapturedJ int) int {
 		return j
 	}
 	nextJ := j + 1
+	// don't capture cell if it has already been captured in the current move event
 	for nextJ < Side && (board[nextJ][i] == 0 || j != lastCapturedJ && board[nextJ][i] == board[j][i]) {
 		nextJ++
 	}
