@@ -26,7 +26,7 @@ func main() {
 	g := tiles.NewGame()
 
 	for {
-		drawState(s, style, g.Board, g.Score)
+		drawState(s, style, g.Board, g.Score, g.GameOver)
 		s.Show()
 
 		switch ev := s.PollEvent().(type) {
@@ -49,14 +49,10 @@ func main() {
 				}
 			}
 		}
-
-		if g.GameOver {
-			return
-		}
 	}
 }
 
-func drawState(s tcell.Screen, style tcell.Style, board [][]uint, score uint) {
+func drawState(s tcell.Screen, style tcell.Style, board [][]uint, score uint, gameOver bool) {
 	y := 0
 
 	drawLine(s, style, y, tcell.RuneULCorner, tcell.RuneHLine, tcell.RuneTTee, tcell.RuneURCorner)
@@ -75,6 +71,9 @@ func drawState(s tcell.Screen, style tcell.Style, board [][]uint, score uint) {
 	y++
 
 	drawScore(s, style, y, score)
+	y++
+
+	drawStatus(s, style, y, gameOver)
 }
 
 const cellWidth = 9
@@ -216,16 +215,6 @@ func drawData(s tcell.Screen, style tcell.Style, y int, row []uint) {
 }
 
 func drawScore(s tcell.Screen, style tcell.Style, y int, score uint) {
-	s.SetContent(0, y, 'S', nil, style)
-	s.SetContent(1, y, 'c', nil, style)
-	s.SetContent(2, y, 'o', nil, style)
-	s.SetContent(3, y, 'r', nil, style)
-	s.SetContent(4, y, 'e', nil, style)
-	s.SetContent(5, y, ':', nil, style)
-	s.SetContent(6, y, ' ', nil, style)
-
-	x := 7
-
 	str := [cellWidth]rune{}
 	len := 0
 	for {
@@ -237,9 +226,24 @@ func drawScore(s tcell.Screen, style tcell.Style, y int, score uint) {
 		}
 	}
 
-	for len > 0 {
+	for x := 0; len > 0; {
 		len--
 		s.SetContent(x, y, str[len], nil, style)
 		x++
+	}
+}
+
+func drawStatus(s tcell.Screen, style tcell.Style, y int, gameOver bool) {
+	if gameOver {
+		s.SetContent(0, y, 'G', nil, style)
+		s.SetContent(1, y, 'a', nil, style)
+		s.SetContent(2, y, 'm', nil, style)
+		s.SetContent(3, y, 'e', nil, style)
+		s.SetContent(4, y, ' ', nil, style)
+		s.SetContent(5, y, 'O', nil, style)
+		s.SetContent(6, y, 'v', nil, style)
+		s.SetContent(7, y, 'e', nil, style)
+		s.SetContent(8, y, 'r', nil, style)
+		s.SetContent(9, y, '!', nil, style)
 	}
 }
