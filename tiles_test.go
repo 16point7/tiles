@@ -1,6 +1,7 @@
 package tiles
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -278,4 +279,57 @@ func clone(source [][]uint) [][]uint {
 		}
 	}
 	return dest
+}
+
+func TestIsTerminal(t *testing.T) {
+	tests := []struct {
+		board      [][]uint
+		isTerminal bool
+	}{
+		{
+			board: [][]uint{
+				{0, 0, 0, 0},
+				{0, 2, 0, 0},
+				{0, 0, 0, 0},
+				{0, 0, 0, 0},
+			},
+			isTerminal: false,
+		},
+		{
+			board: [][]uint{
+				{2, 4, 8, 16},
+				{16, 8, 4, 2},
+				{2, 4, 8, 16},
+				{16, 8, 4, 2},
+			},
+			isTerminal: true,
+		},
+		{
+			board: [][]uint{
+				{2, 4, 8, 16},
+				{16, 0, 4, 2},
+				{2, 4, 8, 16},
+				{16, 8, 4, 2},
+			},
+			isTerminal: false,
+		},
+		{
+			board: [][]uint{
+				{0, 4, 8, 16},
+				{16, 8, 4, 2},
+				{2, 4, 8, 16},
+				{16, 8, 4, 2},
+			},
+			isTerminal: false,
+		},
+	}
+
+	for i, test := range tests {
+		t.Run(fmt.Sprintf("TC %d", i), func(t *testing.T) {
+			got := isTerminal(test.board)
+			if got != test.isTerminal {
+				t.Fatalf("isTermina(board) = %t, want %t", got, test.isTerminal)
+			}
+		})
+	}
 }

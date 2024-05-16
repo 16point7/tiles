@@ -190,13 +190,28 @@ func newTile(board [][]uint) {
 }
 
 func isTerminal(board [][]uint) bool {
-	for j := 1; j < Side-1; j++ {
-		for i := 1; i < Side-1; i++ {
-			if val := board[j][i]; val == board[j+1][i] || val == board[j-1][i] || val == board[j][i+1] || val == board[j][i-1] {
+	for j := 0; j < Side; j++ {
+		for i := 0; i < Side-1; i++ {
+			if val := board[j][i]; val == 0 || val == board[j][i+1] {
 				return false
 			}
 		}
+		if board[j][Side-1] == 0 {
+			return false
+		}
 	}
+
+	for i := 0; i < Side; i++ {
+		for j := 0; j < Side-1; j++ {
+			if val := board[j][i]; val == 0 || val == board[j+1][i] {
+				return false
+			}
+		}
+		if board[Side-1][i] == 0 {
+			return false
+		}
+	}
+
 	return true
 }
 
