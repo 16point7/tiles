@@ -132,13 +132,10 @@ func drawData(s tcell.Screen, style tcell.Style, y int, row []uint) {
 		len := 0
 
 		num := row[t]
-		for {
+		for num != 0 {
 			str[len] = '0' + rune((num % 10))
 			num /= 10
 			len++
-			if num == 0 {
-				break
-			}
 		}
 
 		var left int
