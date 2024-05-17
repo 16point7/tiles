@@ -20,13 +20,18 @@ func main() {
 	}
 	defer s.Fini()
 
-	style := tcell.StyleDefault
-	s.SetStyle(style)
+	s.SetStyle(defStyle)
 
 	g := game.New()
+	g.Board = [][]uint{
+		{0, 2, 4, 8},
+		{16, 32, 64, 128},
+		{256, 512, 1024, 2048},
+		{4096, 8192, 16384, 32768},
+	}
 
 	for {
-		drawState(s, style, g.Board, g.Score, g.GameOver)
+		drawState(s, g.Board, g.Score, g.GameOver)
 		s.Show()
 
 		switch ev := s.PollEvent().(type) {
@@ -52,79 +57,58 @@ func main() {
 	}
 }
 
-func drawState(s tcell.Screen, style tcell.Style, board [][]uint, score uint, gameOver bool) {
+func drawState(s tcell.Screen, board [][]uint, score uint, gameOver bool) {
 	y := 0
 
-	drawLine(s, style, y, tcell.RuneULCorner, tcell.RuneHLine, tcell.RuneTTee, tcell.RuneURCorner)
+	drawLine(s, y, tcell.RuneULCorner, tcell.RuneHLine, tcell.RuneTTee, tcell.RuneURCorner)
 	y++
 
 	for j := 0; j < game.Side-1; j++ {
-		drawData(s, style, y, board[j])
+		drawData(s, y, board[j])
 		y++
-		drawLine(s, style, y, tcell.RuneLTee, tcell.RuneHLine, tcell.RunePlus, tcell.RuneRTee)
+		drawLine(s, y, tcell.RuneLTee, tcell.RuneHLine, tcell.RunePlus, tcell.RuneRTee)
 		y++
 	}
-	drawData(s, style, y, board[game.Side-1])
+	drawData(s, y, board[game.Side-1])
 	y++
 
-	drawLine(s, style, y, tcell.RuneLLCorner, tcell.RuneHLine, tcell.RuneBTee, tcell.RuneLRCorner)
+	drawLine(s, y, tcell.RuneLLCorner, tcell.RuneHLine, tcell.RuneBTee, tcell.RuneLRCorner)
 	y++
 
-	drawScore(s, style, y, score)
+	drawScore(s, y, score)
 	y++
 
-	drawStatus(s, style, y, gameOver)
+	drawStatus(s, y, gameOver)
 }
 
 const cellWidth = 9
 
-func drawLine(s tcell.Screen, style tcell.Style, y int, lb, fill, div, rb rune) {
+func drawLine(s tcell.Screen, y int, lb, fill, div, rb rune) {
 	x := 0
 
-	s.SetContent(x, y, lb, nil, style)
+	s.SetContent(x, y, lb, nil, defStyle)
 	x++
 
 	for t := 0; t < game.Side-1; t++ {
 		for k := 0; k < cellWidth; k++ {
-			s.SetContent(x, y, fill, nil, style)
+			s.SetContent(x, y, fill, nil, defStyle)
 			x++
 		}
-		s.SetContent(x, y, div, nil, style)
+		s.SetContent(x, y, div, nil, defStyle)
 		x++
 	}
 	for k := 0; k < cellWidth; k++ {
-		s.SetContent(x, y, fill, nil, style)
+		s.SetContent(x, y, fill, nil, defStyle)
 		x++
 	}
 
-	s.SetContent(x, y, rb, nil, style)
+	s.SetContent(x, y, rb, nil, defStyle)
 }
 
-var (
-	base    = tcell.StyleDefault.Bold(true)
-	style0  = base.Background(tcell.Color246)
-	style1  = base.Background(tcell.Color240)
-	style2  = base.Background(tcell.Color39)
-	style3  = base.Background(tcell.Color33)
-	style4  = base.Background(tcell.Color185)
-	style5  = base.Background(tcell.Color179)
-	style6  = base.Background(tcell.Color202)
-	style7  = base.Background(tcell.Color196)
-	style8  = base.Background(tcell.Color124)
-	style9  = base.Background(tcell.Color88)
-	style10 = base.Background(tcell.Color52)
-	style11 = base.Background(tcell.Color52)
-	style12 = base.Background(tcell.Color52)
-	style13 = base.Background(tcell.Color52)
-	style14 = base.Background(tcell.Color52)
-	style15 = base.Background(tcell.Color52)
-	style16 = base.Background(tcell.Color52)
-)
-
-func drawData(s tcell.Screen, style tcell.Style, y int, row []uint) {
+func drawData(s tcell.Screen, y int, row []uint) {
 	x := 0
 
-	s.SetContent(x, y, tcell.RuneVLine, nil, style)
+	s.SetContent(x, y, tcell.RuneVLine, nil, defStyle)
 	x++
 
 	for t := 0; t < game.Side; t++ {
@@ -148,7 +132,7 @@ func drawData(s tcell.Screen, style tcell.Style, y int, row []uint) {
 		var numStyle tcell.Style
 		switch row[t] {
 		case 0:
-			numStyle = style
+			numStyle = defStyle
 		case 2 << 0:
 			numStyle = style0
 		case 2 << 1:
@@ -206,12 +190,12 @@ func drawData(s tcell.Screen, style tcell.Style, y int, row []uint) {
 			i++
 		}
 
-		s.SetContent(x, y, tcell.RuneVLine, nil, style)
+		s.SetContent(x, y, tcell.RuneVLine, nil, defStyle)
 		x++
 	}
 }
 
-func drawScore(s tcell.Screen, style tcell.Style, y int, score uint) {
+func drawScore(s tcell.Screen, y int, score uint) {
 	str := [cellWidth]rune{}
 	len := 0
 	for {
@@ -225,22 +209,22 @@ func drawScore(s tcell.Screen, style tcell.Style, y int, score uint) {
 
 	for x := 0; len > 0; {
 		len--
-		s.SetContent(x, y, str[len], nil, style)
+		s.SetContent(x, y, str[len], nil, defStyle)
 		x++
 	}
 }
 
-func drawStatus(s tcell.Screen, style tcell.Style, y int, gameOver bool) {
+func drawStatus(s tcell.Screen, y int, gameOver bool) {
 	if gameOver {
-		s.SetContent(0, y, 'G', nil, style)
-		s.SetContent(1, y, 'a', nil, style)
-		s.SetContent(2, y, 'm', nil, style)
-		s.SetContent(3, y, 'e', nil, style)
-		s.SetContent(4, y, ' ', nil, style)
-		s.SetContent(5, y, 'O', nil, style)
-		s.SetContent(6, y, 'v', nil, style)
-		s.SetContent(7, y, 'e', nil, style)
-		s.SetContent(8, y, 'r', nil, style)
-		s.SetContent(9, y, '!', nil, style)
+		s.SetContent(0, y, 'G', nil, defStyle)
+		s.SetContent(1, y, 'a', nil, defStyle)
+		s.SetContent(2, y, 'm', nil, defStyle)
+		s.SetContent(3, y, 'e', nil, defStyle)
+		s.SetContent(4, y, ' ', nil, defStyle)
+		s.SetContent(5, y, 'O', nil, defStyle)
+		s.SetContent(6, y, 'v', nil, defStyle)
+		s.SetContent(7, y, 'e', nil, defStyle)
+		s.SetContent(8, y, 'r', nil, defStyle)
+		s.SetContent(9, y, '!', nil, defStyle)
 	}
 }
