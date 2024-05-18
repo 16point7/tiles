@@ -20,15 +20,9 @@ func main() {
 	}
 	defer s.Fini()
 
-	s.SetStyle(defStyle)
+	s.SetStyle(bgStyle)
 
 	g := game.New()
-	g.Board = [][]uint{
-		{0, 2, 4, 8},
-		{16, 32, 64, 128},
-		{256, 512, 1024, 2048},
-		{4096, 8192, 16384, 32768},
-	}
 
 	for {
 		drawState(s, g.Board, g.Score, g.GameOver)
