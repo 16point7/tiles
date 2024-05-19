@@ -360,7 +360,7 @@ func TestMove(t *testing.T) {
 		{
 			name: "No double collapse",
 			board: [][]uint{
-				{32, 0, 0, 0},
+				{32, 16, 16, 8},
 				{16, 4, 8, 16},
 				{8, 2, 2, 4},
 				{0, 0, 0, 0},
@@ -368,7 +368,7 @@ func TestMove(t *testing.T) {
 			down: moveRes{
 				want: [][]uint{
 					{0, 0, 0, 0},
-					{32, 0, 0, 0},
+					{32, 16, 16, 8},
 					{16, 4, 8, 16},
 					{8, 2, 2, 4},
 				},
@@ -378,34 +378,34 @@ func TestMove(t *testing.T) {
 			},
 			up: moveRes{
 				want: [][]uint{
-					{32, 4, 8, 16},
-					{16, 2, 2, 4},
-					{8, 0, 0, 0},
+					{32, 16, 16, 8},
+					{16, 4, 8, 16},
+					{8, 2, 2, 4},
 					{0, 0, 0, 0},
 				},
 				score:    0,
 				gameOver: false,
-				newTile:  true,
+				newTile:  false,
 			},
 			left: moveRes{
 				want: [][]uint{
-					{32, 0, 0, 0},
+					{32, 32, 8, 0},
 					{16, 4, 8, 16},
 					{8, 4, 4, 0},
 					{0, 0, 0, 0},
 				},
-				score:    4,
+				score:    36,
 				gameOver: false,
 				newTile:  true,
 			},
 			right: moveRes{
 				want: [][]uint{
-					{0, 0, 0, 32},
+					{0, 32, 32, 8},
 					{16, 4, 8, 16},
 					{0, 8, 4, 4},
 					{0, 0, 0, 0},
 				},
-				score:    4,
+				score:    36,
 				gameOver: false,
 				newTile:  true,
 			},
