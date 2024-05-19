@@ -86,7 +86,7 @@ func nextDown(board [][]uint, j, i, lastCapturedJ int) int {
 	}
 	nextJ := j + 1
 	// don't capture cell if it has already been captured in the current move event
-	for nextJ < Side && (board[nextJ][i] == 0 || j != lastCapturedJ && board[nextJ][i] == board[j][i]) {
+	for nextJ < Side && (board[nextJ][i] == 0 || nextJ != lastCapturedJ && board[nextJ][i] == board[j][i]) {
 		nextJ++
 	}
 	return nextJ - 1
@@ -130,7 +130,7 @@ func nextUp(board [][]uint, j, i, lastCapturedJ int) int {
 		return j
 	}
 	nextJ := j - 1
-	for nextJ > -1 && (board[nextJ][i] == 0 || j != lastCapturedJ && board[nextJ][i] == board[j][i]) {
+	for nextJ > -1 && (board[nextJ][i] == 0 || nextJ != lastCapturedJ && board[nextJ][i] == board[j][i]) {
 		nextJ--
 	}
 	return nextJ + 1
@@ -174,7 +174,7 @@ func nextLeft(board [][]uint, j, i, lastCapturedI int) int {
 		return i
 	}
 	nextI := i - 1
-	for nextI > -1 && (board[j][nextI] == 0 || i != lastCapturedI && board[j][nextI] == board[j][i]) {
+	for nextI > -1 && (board[j][nextI] == 0 || nextI != lastCapturedI && board[j][nextI] == board[j][i]) {
 		nextI--
 	}
 	return nextI + 1
@@ -218,7 +218,7 @@ func nextRight(board [][]uint, j, i, lastCapturedI int) int {
 		return i
 	}
 	nextI := i + 1
-	for nextI < Side && (board[j][nextI] == 0 || i != lastCapturedI && board[j][nextI] == board[j][i]) {
+	for nextI < Side && (board[j][nextI] == 0 || nextI != lastCapturedI && board[j][nextI] == board[j][i]) {
 		nextI++
 	}
 	return nextI - 1

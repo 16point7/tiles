@@ -357,6 +357,59 @@ func TestMove(t *testing.T) {
 				newTile:  false,
 			},
 		},
+		{
+			name: "No double collapse",
+			board: [][]uint{
+				{32, 0, 0, 0},
+				{16, 4, 8, 16},
+				{8, 2, 2, 4},
+				{0, 0, 0, 0},
+			},
+			down: moveRes{
+				want: [][]uint{
+					{0, 0, 0, 0},
+					{32, 0, 0, 0},
+					{16, 4, 8, 16},
+					{8, 2, 2, 4},
+				},
+				score:    0,
+				gameOver: false,
+				newTile:  true,
+			},
+			up: moveRes{
+				want: [][]uint{
+					{32, 4, 8, 16},
+					{16, 2, 2, 4},
+					{8, 0, 0, 0},
+					{0, 0, 0, 0},
+				},
+				score:    0,
+				gameOver: false,
+				newTile:  true,
+			},
+			left: moveRes{
+				want: [][]uint{
+					{32, 0, 0, 0},
+					{16, 4, 8, 16},
+					{8, 4, 4, 0},
+					{0, 0, 0, 0},
+				},
+				score:    4,
+				gameOver: false,
+				newTile:  true,
+			},
+			right: moveRes{
+				want: [][]uint{
+					{0, 0, 0, 32},
+					{16, 4, 8, 16},
+					{0, 8, 4, 4},
+					{0, 0, 0, 0},
+				},
+				score:    4,
+				gameOver: false,
+				newTile:  true,
+			},
+		},
 	}
 
 	for _, test := range tests {
