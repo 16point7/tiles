@@ -1,6 +1,6 @@
 module github.com/16point7/tiles
 
-go 1.22.1
+go 1.22
 
 require github.com/gdamore/tcell v1.4.0
 
