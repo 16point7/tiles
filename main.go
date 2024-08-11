@@ -25,7 +25,7 @@ func main() {
 	g := game.New()
 
 	for {
-		drawState(s, g.Board, g.Score, g.GameOver)
+		drawState(s, g.Board(), g.Score(), g.GameOver())
 		s.Show()
 
 		switch ev := s.PollEvent().(type) {

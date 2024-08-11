@@ -3,15 +3,15 @@ package game
 import "math/rand"
 
 type game struct {
-	Board    [][]uint
-	Score    uint
-	GameOver bool
+	board    [][]uint
+	score    uint
+	gameOver bool
 }
 
 func New() *game {
 	board := createBoard()
 	initialize(board)
-	return &game{Board: board}
+	return &game{board: board}
 }
 
 // Size of game board is Side X Side cells
@@ -36,25 +36,25 @@ func initialize(board [][]uint) {
 }
 
 func (g *game) Reset() {
-	for _, row := range g.Board {
+	for _, row := range g.board {
 		for i := range row {
 			row[i] = 0
 		}
 	}
-	initialize(g.Board)
-	g.Score = 0
-	g.GameOver = false
+	initialize(g.board)
+	g.score = 0
+	g.gameOver = false
 }
 
 func (g *game) MoveDown() {
-	if g.GameOver {
+	if g.gameOver {
 		return
 	}
-	score, moved := moveDown(g.Board)
-	g.Score += score
+	score, moved := moveDown(g.board)
+	g.score += score
 	if moved {
-		newTile(g.Board)
-		g.GameOver = isTerminal(g.Board)
+		newTile(g.board)
+		g.gameOver = isTerminal(g.board)
 	}
 }
 
@@ -93,14 +93,14 @@ func nextDown(board [][]uint, j, i, lastCapturedJ int) int {
 }
 
 func (g *game) MoveUp() {
-	if g.GameOver {
+	if g.gameOver {
 		return
 	}
-	score, moved := moveUp(g.Board)
-	g.Score += score
+	score, moved := moveUp(g.board)
+	g.score += score
 	if moved {
-		newTile(g.Board)
-		g.GameOver = isTerminal(g.Board)
+		newTile(g.board)
+		g.gameOver = isTerminal(g.board)
 	}
 }
 
@@ -137,14 +137,14 @@ func nextUp(board [][]uint, j, i, lastCapturedJ int) int {
 }
 
 func (g *game) MoveLeft() {
-	if g.GameOver {
+	if g.gameOver {
 		return
 	}
-	score, moved := moveLeft(g.Board)
-	g.Score += score
+	score, moved := moveLeft(g.board)
+	g.score += score
 	if moved {
-		newTile(g.Board)
-		g.GameOver = isTerminal(g.Board)
+		newTile(g.board)
+		g.gameOver = isTerminal(g.board)
 	}
 }
 
@@ -181,14 +181,14 @@ func nextLeft(board [][]uint, j, i, lastCapturedI int) int {
 }
 
 func (g *game) MoveRight() {
-	if g.GameOver {
+	if g.gameOver {
 		return
 	}
-	score, moved := moveRight(g.Board)
-	g.Score += score
+	score, moved := moveRight(g.board)
+	g.score += score
 	if moved {
-		newTile(g.Board)
-		g.GameOver = isTerminal(g.Board)
+		newTile(g.board)
+		g.gameOver = isTerminal(g.board)
 	}
 }
 
@@ -274,4 +274,16 @@ func isTerminal(board [][]uint) bool {
 	}
 
 	return true
+}
+
+func (g *game) Board() [][]uint {
+	return g.board
+}
+
+func (g *game) Score() uint {
+	return g.score
+}
+
+func (g *game) GameOver() bool {
+	return g.gameOver
 }
