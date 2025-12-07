@@ -12,7 +12,7 @@ func TestNew(t *testing.T) {
 }
 
 func TestReset(t *testing.T) {
-	g := &game{
+	g := &Game{
 		board: [][]uint{
 			{2, 2, 2, 2},
 			{4, 4, 4, 4},
@@ -35,7 +35,7 @@ func TestReset(t *testing.T) {
 	assertNewGame(t, g)
 }
 
-func assertNewGame(t *testing.T, g *game) {
+func assertNewGame(t *testing.T, g *Game) {
 	t.Helper()
 
 	if g.GameOver() {
@@ -414,19 +414,19 @@ func TestMove(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			g := &game{board: clone(test.board)}
+			g := &Game{board: clone(test.board)}
 			g.MoveDown()
 			assertMoveRes(t, g.Board(), test.down.want, g.GameOver(), test.down.gameOver, test.down.newTile, g.Score(), test.down.score)
 
-			g = &game{board: clone(test.board)}
+			g = &Game{board: clone(test.board)}
 			g.MoveUp()
 			assertMoveRes(t, g.Board(), test.up.want, g.GameOver(), test.up.gameOver, test.up.newTile, g.Score(), test.up.score)
 
-			g = &game{board: clone(test.board)}
+			g = &Game{board: clone(test.board)}
 			g.MoveLeft()
 			assertMoveRes(t, g.Board(), test.left.want, g.GameOver(), test.left.gameOver, test.left.newTile, g.Score(), test.left.score)
 
-			g = &game{board: clone(test.board)}
+			g = &Game{board: clone(test.board)}
 			g.MoveRight()
 			assertMoveRes(t, g.Board(), test.right.want, g.GameOver(), test.right.gameOver, test.right.newTile, g.Score(), test.right.score)
 		})
@@ -469,9 +469,7 @@ func assertMoveRes(t *testing.T, gotBoard, wantBoard [][]uint, gotGameOver, want
 func clone(source [][]uint) [][]uint {
 	dest := createBoard()
 	for j, row := range source {
-		for i, val := range row {
-			dest[j][i] = val
-		}
+		copy(dest[j], row)
 	}
 	return dest
 }

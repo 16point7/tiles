@@ -2,16 +2,16 @@ package game
 
 import "math/rand"
 
-type game struct {
+type Game struct {
 	board    [][]uint
 	score    uint
 	gameOver bool
 }
 
-func New() *game {
+func New() *Game {
 	board := createBoard()
 	initialize(board)
-	return &game{board: board}
+	return &Game{board: board}
 }
 
 // Size of game board is Side X Side cells
@@ -35,7 +35,7 @@ func initialize(board [][]uint) {
 	}
 }
 
-func (g *game) Reset() {
+func (g *Game) Reset() {
 	for _, row := range g.board {
 		for i := range row {
 			row[i] = 0
@@ -46,7 +46,7 @@ func (g *game) Reset() {
 	g.gameOver = false
 }
 
-func (g *game) MoveDown() {
+func (g *Game) MoveDown() {
 	if g.gameOver {
 		return
 	}
@@ -92,7 +92,7 @@ func nextDown(board [][]uint, j, i, lastCapturedJ int) int {
 	return nextJ - 1
 }
 
-func (g *game) MoveUp() {
+func (g *Game) MoveUp() {
 	if g.gameOver {
 		return
 	}
@@ -136,7 +136,7 @@ func nextUp(board [][]uint, j, i, lastCapturedJ int) int {
 	return nextJ + 1
 }
 
-func (g *game) MoveLeft() {
+func (g *Game) MoveLeft() {
 	if g.gameOver {
 		return
 	}
@@ -180,7 +180,7 @@ func nextLeft(board [][]uint, j, i, lastCapturedI int) int {
 	return nextI + 1
 }
 
-func (g *game) MoveRight() {
+func (g *Game) MoveRight() {
 	if g.gameOver {
 		return
 	}
@@ -276,14 +276,14 @@ func isTerminal(board [][]uint) bool {
 	return true
 }
 
-func (g *game) Board() [][]uint {
+func (g *Game) Board() [][]uint {
 	return g.board
 }
 
-func (g *game) Score() uint {
+func (g *Game) Score() uint {
 	return g.score
 }
 
-func (g *game) GameOver() bool {
+func (g *Game) GameOver() bool {
 	return g.gameOver
 }
